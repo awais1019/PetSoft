@@ -9,7 +9,7 @@ import React from "react";
 export default function PetList() {
   const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
   return (
-    <ul className="bg-white border-b border-black/[0.1] rounded-lg overflow-hidden">
+    <ul className="bg-white border-b border-light rounded-lg overflow-hidden">
       {pets.map((pet) => (
         <li key={pet.id}>
           <button onClick={() => handleChangeSelectedPetId(pet.id)} className={cn("w-full h-[70px] cursor-pointer hover:bg-[#EFF1F2] focus:bg-[#EFF1F2] transition px-5 flex items-center gap-3 text-base", {

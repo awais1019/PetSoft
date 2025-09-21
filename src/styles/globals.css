@@ -6,11 +6,13 @@
 @theme {
     --color-background: oklch(94.7% 0.009 248.7);
     --color-pastel-green: oklch(77.6% 0.164 163.4);
+     --color-light: oklch(0 0 0 / 0.08);
 }
 
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
+
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
     --color-background: var(--background);
