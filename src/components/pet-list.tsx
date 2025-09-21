@@ -1,22 +1,25 @@
-import { Pet } from "@/lib/types";
+"use client";
+
+import { usePetContext } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
+
 import Image from "next/image";
 import React from "react";
 
-
-type PetListProps = {
-  pets: Pet[];
-};
-
-export default function PetList({ pets }: PetListProps) {
+export default function PetList() {
+  const { pets, selectedPetId, handleChangeSelectedPetId } = usePetContext();
   return (
     <ul className="bg-white border-b border-black/[0.1] rounded-lg overflow-hidden">
       {pets.map((pet) => (
         <li key={pet.id}>
-          <button className="w-full h-[70px] cursor-pointer hover:bg-[#EFF1F2] focus:bg-[#EFF1F2] transition px-5 flex items-center gap-3 text-base">
+          <button onClick={() => handleChangeSelectedPetId(pet.id)} className={cn("w-full h-[70px] cursor-pointer hover:bg-[#EFF1F2] focus:bg-[#EFF1F2] transition px-5 flex items-center gap-3 text-base", {
+              "bg-[#EFF1F2]": selectedPetId === pet.id
+            })}>
             <Image
-              src={pet.imageUrl}
+              src={`https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png`}
               alt="pet image"
               width={45}
+              quality={50}
               height={45}
               className="rounded-full object-cover h-[45px] w-[45px]"
           />

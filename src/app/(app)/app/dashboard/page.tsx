@@ -4,13 +4,12 @@ import PetDetails from "@/components/pet-details";
 import PetList from "@/components/pet-list";
 import SearchForm from "@/components/search-form";
 import Stats from "@/components/stats";
-import { Pet } from "@/lib/types";
+
 
 import React from "react";
 
-export default async function DashboardPage() {
-  const data = await fetch('https://bytegrad.com/course-assets/projects/petsoft/api/pets');
-  const pets: Pet[] = await data.json();
+export default  function DashboardPage() {
+
 
   return (
     <main>
@@ -25,7 +24,7 @@ export default async function DashboardPage() {
         </div>
         <div className="md:row-start-2 md:row-span-full md:col-start-1 md:col-span-1">
           <ContentBlock>
-            <PetList pets={pets} />
+            <PetList />
           </ContentBlock>
         </div>
         <div className="md:row-start-1 md:row-span-full md:col-start-2 md:col-span-full">
