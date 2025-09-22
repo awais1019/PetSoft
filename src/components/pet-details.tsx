@@ -36,20 +36,22 @@ function EmptyView() {
   );
 }
 function TopBar({ pet }: Props) {
+
+  const { handleCheckoutPet } = usePetContext();
   return (
     <div className="flex items-center px-5 py-3 bg-white border-b border-light">
       <Image
-        src={`https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png`}
+        src={pet.imageUrl}
         alt="pet image"
-        width={75}
-        quality={50}
-        height={75}
-        className="rounded-full object-cover h-[75px] w-[75px]"
+        width={70}
+        unoptimized
+        height={70}
+        className="rounded-full object-cover h-[70px] w-[70px]"
       />
-      <h2 className="text-2xl font-semibold ml-6 leading-7">{pet?.name}</h2>
+      <h2 className="text-2xl font-semibold ml-4 leading-7">{pet?.name}</h2>
       <div className="ml-auto space-x-2">
         <PetButton actionType="Edit">Edit</PetButton>
-        <PetButton actionType="Checkout">Checkout</PetButton>
+        <PetButton actionType="Checkout" onClick={() => handleCheckoutPet(pet.id)}>Checkout</PetButton>
       </div>
     </div>
   );

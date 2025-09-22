@@ -26,11 +26,11 @@ export default function PetList() {
             )}
           >
             <Image
-              src={`https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png`}
+              src={pet.imageUrl}
               alt="pet image"
               width={45}
-              quality={50}
               height={45}
+              unoptimized
               className="rounded-full object-cover h-[45px] w-[45px]"
             />
             <p className="text-semibold">{pet.name}</p>
