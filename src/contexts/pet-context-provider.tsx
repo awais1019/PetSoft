@@ -14,6 +14,7 @@ type TPetContext = {
   selectedPetId: string | null;
   selectedPet: Pet | null;
   handleChangeSelectedPetId: (id: string | null) => void;
+  handleAddPet: (pet: Omit<Pet, "id">) => void;
   handleCheckoutPet: (id: string) => void;
 };
 
@@ -30,7 +31,13 @@ export default function PetContextProvider({
   const selectedPet= pets.find(pet => pet.id === selectedPetId) || null;
   const totalPets = pets.length;
 
-
+  const handleAddPet = (pet: Omit<Pet, "id">) => {
+    const newPet = {
+      id: (Math.random() * 10000).toFixed(0),
+      ...pet
+    }
+    setPets((prevPets) => [...prevPets, newPet]);
+  }
   const handleChangeSelectedPetId = (id: string | null) => {
     setSelectedPetId(id);
   }
@@ -47,7 +54,8 @@ export default function PetContextProvider({
         selectedPet,
         totalPets,
         handleChangeSelectedPetId,
-        handleCheckoutPet
+        handleCheckoutPet,
+        handleAddPet
       }}
     >
       {children}

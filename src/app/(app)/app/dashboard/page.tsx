@@ -5,7 +5,7 @@ import PetDetails from "@/components/pet-details";
 import PetList from "@/components/pet-list";
 import SearchForm from "@/components/search-form";
 import Stats from "@/components/stats";
-import { Plus, PlusIcon } from "lucide-react";
+import {PlusIcon } from "lucide-react";
 
 
 import React from "react";
