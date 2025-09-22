@@ -16,6 +16,7 @@ type TPetContext = {
   handleChangeSelectedPetId: (id: string | null) => void;
   handleAddPet: (pet: Omit<Pet, "id">) => void;
   handleCheckoutPet: (id: string) => void;
+  handleEditPet: (updatedPet: Pet) => void;
 };
 
 export const PetContext = React.createContext<TPetContext | null>(null);
@@ -45,7 +46,11 @@ export default function PetContextProvider({
     setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
     setSelectedPetId(null);
   }
-
+  const handleEditPet = (updatedPet: Pet) => {
+    setPets((prevPets) =>
+      prevPets.map((pet) => (pet.id === updatedPet.id ? updatedPet : pet))
+    );
+  } 
   return (
     <PetContext.Provider
       value={{
@@ -55,7 +60,8 @@ export default function PetContextProvider({
         totalPets,
         handleChangeSelectedPetId,
         handleCheckoutPet,
-        handleAddPet
+        handleAddPet,
+        handleEditPet
       }}
     >
       {children}
