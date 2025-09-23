@@ -6,6 +6,7 @@ import { Pet } from "@/lib/types";
 import Image from "next/image";
 import React from "react";
 import PetButton from "./pet-button";
+import { PlaceholderImage } from "@/lib/constants";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -41,7 +42,7 @@ function TopBar({ pet }: Props) {
   return (
     <div className="flex items-center px-5 py-3 bg-white border-b border-light">
       <Image
-        src={pet.imageUrl}
+        src={pet.imageUrl || PlaceholderImage}
         alt="pet image"
         width={70}
         unoptimized

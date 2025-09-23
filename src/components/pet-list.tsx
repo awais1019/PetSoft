@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaceholderImage } from "@/lib/constants";
 import { usePetContext, useSearchContext } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +27,7 @@ export default function PetList() {
             )}
           >
             <Image
-              src={pet.imageUrl}
+              src={pet.imageUrl || PlaceholderImage}
               alt="pet image"
               width={45}
               height={45}

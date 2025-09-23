@@ -6,6 +6,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
 import { Button } from "./ui/button";
+import { PlaceholderImage } from "@/lib/constants";
 
 type PetFormProps = {
   actionType: "Add" | "Edit";
@@ -25,7 +26,7 @@ export default function PetForm({
       ownerName: formData.get("owner") as string,
       imageUrl:
         (formData.get("image") as string) ||
-        "https://bytegrad.com/course-assets/react-nextjs/pet-placeholder.png",
+       PlaceholderImage,
       age: Number(formData.get("age") as string),
       notes: formData.get("notes") as string,
     };
