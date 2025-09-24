@@ -5,8 +5,10 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
-import { Button } from "./ui/button";
 import { AddPet } from "@/actions/actions";
+import PetFormBtn from "./pet-form-btn";
+import { toast } from "sonner";
+import { sleep } from "@/lib/utils";
 
 type PetFormProps = {
   actionType: "Add" | "Edit";
@@ -22,9 +24,12 @@ export default function PetForm({
   return (
     <form action={async (formData) =>
     {
-     await AddPet(formData);
-     onFormSubmission();
-
+      const error = await AddPet(formData);
+      if (error) {
+        toast.warning(error.message);
+        return;
+      }
+      onFormSubmission();
     }
       } className="flex gap-4 flex-col">
       <div className="space-y-3">
@@ -78,9 +83,7 @@ export default function PetForm({
         </div>
       </div>
 
-      <Button className="self-end mt-2" type="submit">
-        {actionType === "Add" ? "Add Pet" : "Edit Pet"}
-      </Button>
+      <PetFormBtn actionType={actionType} />
     </form>
   );
 }

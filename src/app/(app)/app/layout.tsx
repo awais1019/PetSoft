@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 
 
 import React from "react";
+import { Toaster } from "sonner";
 
 export default async function layout({
   children,
@@ -22,9 +23,10 @@ export default async function layout({
         <SearchContextProvider>
           <PetContextProvider data={pets}>{children}</PetContextProvider>
         </SearchContextProvider>
-
+        
         <AppFooter />
       </div>
+      <Toaster position="top-right" />
     </>
   );
 }
