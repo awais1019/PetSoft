@@ -6,39 +6,27 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
 import { Button } from "./ui/button";
-import { PlaceholderImage } from "@/lib/constants";
+import { AddPet } from "@/actions/actions";
 
 type PetFormProps = {
   actionType: "Add" | "Edit";
-  onFormSubmission?: () => void;
+  onFormSubmission: () => void;
 };
 
 export default function PetForm({
   actionType,
   onFormSubmission,
 }: PetFormProps) {
-  const { handleAddPet, handleEditPet, selectedPet } = usePetContext();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const newPet = {
-      name: formData.get("name") as string,
-      ownerName: formData.get("owner") as string,
-      imageUrl:
-        (formData.get("image") as string) ||
-       PlaceholderImage,
-      age: Number(formData.get("age") as string),
-      notes: formData.get("notes") as string,
-    };
-    if (actionType === "Edit" && selectedPet) {
-      handleEditPet({ ...newPet, id: selectedPet.id });
-    } else if (actionType === "Add") {
-      handleAddPet(newPet);
-    }
-    onFormSubmission?.();
-  };
+  const { selectedPet } = usePetContext();
+  
   return (
-    <form onSubmit={handleSubmit} className="flex gap-4 flex-col">
+    <form action={async (formData) =>
+    {
+     await AddPet(formData);
+     onFormSubmission();
+
+    }
+      } className="flex gap-4 flex-col">
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>

@@ -23,9 +23,8 @@ export const PetContext = React.createContext<TPetContext | null>(null);
 
 export default function PetContextProvider({
   children,
-  data,
+  data:pets,
 }: PetContextProviderProps) {
-  const [pets, setPets] = useState<Pet[]>(data);
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
 
@@ -50,7 +49,7 @@ export default function PetContextProvider({
     setPets((prevPets) =>
       prevPets.map((pet) => (pet.id === updatedPet.id ? updatedPet : pet))
     );
-  } 
+  }
   return (
     <PetContext.Provider
       value={{
