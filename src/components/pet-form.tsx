@@ -5,10 +5,9 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
-import { addPet,editPet } from "@/actions/actions";
 import PetFormBtn from "./pet-form-btn";
-import { toast } from "sonner";
 
+import { PlaceholderImage } from "@/lib/constants";
 
 type PetFormProps = {
   actionType: "Add" | "Edit";
@@ -19,28 +18,28 @@ export default function PetForm({
   actionType,
   onFormSubmission,
 }: PetFormProps) {
-  const { selectedPet } = usePetContext();
-  
+  const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
+
   return (
-    <form action={async (formData) =>
-    {
-      if(actionType === "Add"){
-        const error = await addPet(formData);
-        if (error) {
-          toast.warning(error.message);
-          return;
+    <form
+      action={async (formData) => {
+        onFormSubmission();
+        const newPet = {
+          name: formData.get("name") as string,
+          ownerName: formData.get("owner") as string,
+          imageUrl: (formData.get("image") as string) || PlaceholderImage,
+          age: Number(formData.get("age")),
+          notes: formData.get("notes") as string,
+        };
+
+        if (actionType === "Add") {
+          handleAddPet(newPet);
+        } else if (actionType === "Edit" && selectedPet) {
+          handleEditPet(newPet, selectedPet.id);
         }
-      } else if (actionType === "Edit" && selectedPet) {
-        const error = await editPet(formData, selectedPet.id);
-        if (error) {
-          toast.warning(error.message);
-          return;
-        }
-      }
-    
-      onFormSubmission();
-    }
-      } className="flex gap-4 flex-col">
+      }}
+      className="flex gap-4 flex-col"
+    >
       <div className="space-y-3">
         <div className="space-y-1">
           <Label htmlFor="name">Name</Label>

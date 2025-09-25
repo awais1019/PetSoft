@@ -7,7 +7,6 @@ import Image from "next/image";
 import React from "react";
 import PetButton from "./pet-button";
 import { PlaceholderImage } from "@/lib/constants";
-import { checkoutPet } from "@/actions/actions";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();
@@ -38,6 +37,7 @@ function EmptyView() {
   );
 }
 function TopBar({ pet }: Props) {
+  const { handleCheckoutPet } = usePetContext();
   return (
     <div className="flex items-center px-5 py-3 bg-white border-b border-light">
       <Image
@@ -53,7 +53,7 @@ function TopBar({ pet }: Props) {
         <PetButton actionType="Edit">Edit</PetButton>
         <PetButton
           actionType="Checkout"
-          onClick={async () => await checkoutPet(pet.id)}
+          onClick={async () => await handleCheckoutPet(pet.id)}
         >
           Checkout
         </PetButton>
