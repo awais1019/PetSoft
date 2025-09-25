@@ -1,12 +1,12 @@
 "use client";
 
 import { usePetContext } from "@/lib/hooks";
-import { Pet } from "@/lib/types";
 
 import Image from "next/image";
 import React from "react";
 import PetButton from "./pet-button";
 import { PlaceholderImage } from "@/lib/constants";
+import { Pet } from "@/generated/prisma";
 
 export default function PetDetails() {
   const { selectedPet } = usePetContext();

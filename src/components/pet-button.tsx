@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -39,8 +40,13 @@ export default function PetButton({ children, actionType, onClick }: Props) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">
-              {actionType === "Add" ? "Add a Pet" : "Edit Pet"}
+              {actionType === "Add" ? "Add a new Pet" : "Edit Pet"}
             </DialogTitle>
+            <DialogDescription>
+              {actionType === "Add"
+                ? "Enter the details to add a new pet."
+                : "Edit the prefilled details to update this pet."}
+            </DialogDescription>
           </DialogHeader>
           <PetForm
             actionType={actionType}
