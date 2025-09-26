@@ -6,20 +6,14 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { usePetContext } from "@/lib/hooks";
 import PetFormBtn from "./pet-form-btn";
-
-import { PlaceholderImage } from "@/lib/constants";
 import { useForm } from "react-hook-form";
+import { PetFormSchema, TPetFormData } from "@/lib/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PetEssentials } from "@/lib/types";
 
 type PetFormProps = {
   actionType: "Add" | "Edit";
   onFormSubmission: () => void;
-};
-type FormData = {
-  name: string;
-  ownerName: string;
-  imageUrl: string;
-  age: number;
-  notes: string;
 };
 
 export default function PetForm({
@@ -28,29 +22,36 @@ export default function PetForm({
 }: PetFormProps) {
   const { selectedPet, handleAddPet, handleEditPet } = usePetContext();
 
-
-  const { register,
+  const {
+    register,
     formState: { errors },
-    trigger
-   } = useForm<FormData>();
+    trigger,
+    getValues,
+  } = useForm<TPetFormData>({
+    resolver: zodResolver(PetFormSchema),
+    defaultValues: {
+      name: actionType === "Edit" && selectedPet ? selectedPet.name : "",
+      ownerName:
+        actionType === "Edit" && selectedPet ? selectedPet.ownerName : "",
+      imageUrl:
+        actionType === "Edit" && selectedPet ? selectedPet.imageUrl : "",
+      age: actionType === "Edit" && selectedPet ? selectedPet.age : undefined,
+      notes:
+        actionType === "Edit" && selectedPet ? selectedPet.notes : "",
+    },
+    mode: "onBlur",
+  });
 
   return (
     <form
-      action={async (formData) => {
-        const result=await trigger();
-        if(!result){
+      action={async () => {
+        const result = await trigger();
+        if (!result) {
           return;
         }
-
         onFormSubmission();
-        const newPet = {
-          name: formData.get("name") as string,
-          ownerName: formData.get("owner") as string,
-          imageUrl: (formData.get("image") as string) || PlaceholderImage,
-          age: Number(formData.get("age")),
-          notes: formData.get("notes") as string,
-        };
-
+        
+        const newPet: PetEssentials = getValues();
         if (actionType === "Add") {
           handleAddPet(newPet);
         } else if (actionType === "Edit" && selectedPet) {
@@ -65,48 +66,49 @@ export default function PetForm({
           <Input
             id="name"
             type="text"
-            {...register("name", { maxLength: { value: 5, message: "Name cannot exceed 5 characters" }, required: { value: true, message: "Name is required" } })}
-      
+            {...register("name")}
           />
-          {errors.name && (<p className="text-sm text-red-600">{errors.name.message}</p>)}
+          {errors.name && (
+            <p className="text-sm text-red-600">{errors.name.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="owner">Owner Name</Label>
           <Input
             id="owner"
             type="text"
-            {...register("ownerName", { required: { value: true, message: "Owner name is required" } })}
-        
+            {...register("ownerName")}
+            
           />
-          {errors.ownerName && (<p className="text-sm text-red-600">{errors.ownerName.message}</p>)}
+          {errors.ownerName && (
+            <p className="text-sm text-red-600">{errors.ownerName.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="image">Image URL</Label>
-          <Input
-            id="image"
-            type="text"
-            {...register("imageUrl")}
-      
-          />
+          <Input id="image" type="text" {...register("imageUrl")} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="age">Age</Label>
           <Input
             id="age"
             type="number"
-            {...register("age", { required: true })}
-        
+            {...register("age")}
           />
-          {errors.age && (<p className="text-sm text-red-600">{errors.age.message}</p>)}
+          {errors.age && (
+            <p className="text-sm text-red-600">{errors.age.message}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="notes">Notes</Label>
           <Textarea
             id="notes"
             rows={3}
-            {...register("notes", { required: true })}
+            {...register("notes")}
           />
-          {errors.notes && (<p className="text-sm text-red-600">{errors.notes.message}</p>)} 
+          {errors.notes && (
+            <p className="text-sm text-red-600">{errors.notes.message}</p>
+          )}
         </div>
       </div>
 
