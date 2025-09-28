@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/lib/auth";
+import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { PetFormSchema, PetIdSchema } from "@/lib/schema";
 import { sleep } from "@/lib/utils";
@@ -10,6 +10,12 @@ export async function login(data: FormData) {
   const authData = Object.fromEntries(data.entries());
 
  await signIn("credentials", authData);
+}
+
+
+export async function logout() {
+  await signOut({ redirectTo: "/login" });
+
 }
 
 export async function addPet(pet: unknown) {
