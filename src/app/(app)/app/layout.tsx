@@ -3,8 +3,7 @@ import AppHeader from "@/components/app-header";
 import BackgroundPattern from "@/components/background-pattern";
 import PetContextProvider from "@/contexts/pet-context-provider";
 import SearchContextProvider from "@/contexts/search-context-provider";
-import prisma from "@/lib/prisma";
-
+import { checkAuth, getAllPetsByUserId } from "@/lib/server-utils";
 
 import React from "react";
 import { Toaster } from "sonner";
@@ -14,7 +13,8 @@ export default async function layout({
 }: {
   children: React.ReactNode;
 }) {
-  const pets= await prisma.pet.findMany();
+  const session = await checkAuth();
+  const pets = await getAllPetsByUserId(session.user.id);
   return (
     <>
       <BackgroundPattern />
@@ -23,7 +23,7 @@ export default async function layout({
         <SearchContextProvider>
           <PetContextProvider data={pets}>{children}</PetContextProvider>
         </SearchContextProvider>
-        
+
         <AppFooter />
       </div>
       <Toaster position="top-right" />

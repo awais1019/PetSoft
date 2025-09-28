@@ -1,16 +1,14 @@
 import ContentBlock from "@/components/content-block";
 import H1 from "@/components/h1";
 import SignOutButton from "@/components/sign-out-btn";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { checkAuth } from "@/lib/server-utils";
+
 
 import React from "react";
 
 export default async function AccountPage() {
-  const session = await auth();
-  if (!session) {
-    redirect("/login");
-  }
+  const session = await checkAuth();
+ 
   return (
     <main>
       <H1 className="my-4 text-white">Your Account</H1>
