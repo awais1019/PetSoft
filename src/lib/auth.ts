@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { getUserbyEmail } from "./server-utils";
+import { authSchema } from "./schema";
 
 const config: NextAuthConfig = {
   pages: {
@@ -12,10 +13,13 @@ const config: NextAuthConfig = {
     Credentials({
       //runs on sign in
       async authorize(credentials) {
-        const { email, password } = credentials as {
-          email: string;
-          password: string;
-        };
+        const parsedCredentials = authSchema.safeParse(credentials);
+        if (!parsedCredentials.success) {
+       
+          return null;
+        }
+
+        const { email, password } = parsedCredentials.data;
 
         const user = await getUserbyEmail(email);
         if (!user) {
@@ -68,4 +72,4 @@ const config: NextAuthConfig = {
   session: { strategy: "jwt" },
 } satisfies NextAuthConfig;
 
-export const { auth, signIn, signOut } = NextAuth(config);
+export const { auth, signIn, signOut, handlers } = NextAuth(config);

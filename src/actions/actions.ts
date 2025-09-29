@@ -1,37 +1,64 @@
 "use server";
 
-import {signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { PetFormSchema, PetIdSchema } from "@/lib/schema";
+import { signIn, signOut } from "@/lib/auth";
+import { authSchema, PetFormSchema, PetIdSchema } from "@/lib/schema";
 import { checkAuth, getPetbyId } from "@/lib/server-utils";
-import { sleep } from "@/lib/utils";
+import { getPrismaErrorMessage, sleep } from "@/lib/utils";
 import bcrypt from "bcryptjs";
+import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
+export async function login(prevState: unknown, data: unknown) {
+  await sleep(1000);
+  if (!(data instanceof FormData)) {
+    return {
+      error: "Invalid form data",
+    };
+  }
 
-export async function login(data: FormData) {
-  await signIn("credentials", data);
-  redirect("/app/dashboard");
+  try {
+    await signIn("credentials", data);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: "Invalid Credentials" };
+    }
+    throw error;
+  }
 }
 
-export async function register(data: FormData) {
-  const hashedPassword = await bcrypt.hash(data.get("password") as string, 10);
-  const formData = {
-    email: data.get("email") as string,
-    password: hashedPassword,
-  };
+export async function register(prevState: unknown, data: unknown) {
+  await sleep(1000);
+  if (!(data instanceof FormData)) {
+    return {
+      error: "Unexpected form submission. Please refresh and try again.",
+    };
+  }
+  const formData = Object.fromEntries(data.entries());
+  const validFormData = authSchema.safeParse(formData);
+  if (!validFormData.success) {
+    return {
+      error: "Looks like some details are missing or invalid. Can you double-check?",
+    };
+  }
+  const { email, password } = validFormData.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  await prisma.user.create({
-    data: {
-      email: formData.email,
-      hashedPassword: formData.password,
-    },
-  });
+  try {
+    await prisma.user.create({
+      data: {
+        email,
+        hashedPassword: hashedPassword,
+      },
+    });
+  } catch (error) {
+  return { error: getPrismaErrorMessage(error) };
+}
   await signIn("credentials", data);
 }
 
 export async function logout() {
+  await sleep(100);
   await signOut({ redirectTo: "/" });
 }
 
@@ -64,7 +91,6 @@ export async function addPet(pet: unknown) {
   revalidatePath("/app", "layout");
 }
 export async function editPet(newPet: unknown, petId: unknown) {
-
   //check if user is authenticated
   const session = await checkAuth();
   await sleep(1000);
