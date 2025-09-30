@@ -15,7 +15,6 @@ const config: NextAuthConfig = {
       async authorize(credentials) {
         const parsedCredentials = authSchema.safeParse(credentials);
         if (!parsedCredentials.success) {
-       
           return null;
         }
 
@@ -48,7 +47,13 @@ const config: NextAuthConfig = {
       }
 
       if (!isAcessingPrivateRoute && isAuthenticated) {
-        return NextResponse.redirect(new URL("/app/dashboard", request.url));
+        if (
+          request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/signup")
+        ) {
+          return Response.redirect(new URL("/payment", request.url));
+        }
+        return true;
       }
       if (!isAcessingPrivateRoute && !isAuthenticated) {
         return true;

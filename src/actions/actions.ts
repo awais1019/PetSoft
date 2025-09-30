@@ -9,6 +9,10 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 
+import Stripe from "stripe";
+import { redirect } from "next/navigation";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
 export async function login(prevState: unknown, data: unknown) {
   await sleep(1000);
   if (!(data instanceof FormData)) {
@@ -38,7 +42,8 @@ export async function register(prevState: unknown, data: unknown) {
   const validFormData = authSchema.safeParse(formData);
   if (!validFormData.success) {
     return {
-      error: "Looks like some details are missing or invalid. Can you double-check?",
+      error:
+        "Looks like some details are missing or invalid. Can you double-check?",
     };
   }
   const { email, password } = validFormData.data;
@@ -52,8 +57,8 @@ export async function register(prevState: unknown, data: unknown) {
       },
     });
   } catch (error) {
-  return { error: getPrismaErrorMessage(error) };
-}
+    return { error: getPrismaErrorMessage(error) };
+  }
   await signIn("credentials", data);
 }
 
@@ -168,4 +173,18 @@ export async function checkoutPet(petId: unknown) {
   }
 
   revalidatePath("/app", "layout");
+}
+
+export async function createCheckoutSession() {
+  //check if user is authenticated
+  const session = await checkAuth();
+  const checkoutSession=  await stripe.checkout.sessions.create({
+    customer_email: session.user.email || undefined,
+    line_items: [{ price: "price_1SD62oDiLDCnEIpyILYbuwGL", quantity: 1 }],
+    mode: "payment",
+    success_url: `${process.env.NEXTAUTH_URL}/payment?success=true`,
+    cancel_url: `${process.env.NEXTAUTH_URL}/payment?canceled=true`,
+  });
+
+  redirect(checkoutSession.url!);
 }
