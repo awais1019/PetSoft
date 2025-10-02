@@ -1,34 +1,31 @@
-"use client";
-
-import { createCheckoutSession } from "@/actions/actions";
 import H1 from "@/components/h1";
-import { Button } from "@/components/ui/button";
+import PaymentAccessButton from "@/components/payment-acess-btn";
+import PaymentButton from "@/components/payment-btn";
 import React from "react";
 
-export default function page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-  
+export default async function page(props: { searchParams: SearchParams }) {
+  const query = await props.searchParams;
+
+  const success = query.success;
+  const canceled = query.canceled;
+
   return (
     <main className="flex flex-col items-center justify-center space-y-8">
       <H1>PetSoft access requires payment </H1>
 
-      {!searchParams.success && (
-        <Button onClick={createCheckoutSession}>
-          Get life time access by paying $199
-        </Button>
-      )}
+      {success && <PaymentAccessButton />}
 
-      {searchParams.success && (
+      {!success && <PaymentButton />}
+
+      {success && (
         <p className="tex-sm text-green-900">
           Payment successful! You now have access to PetSoft.
         </p>
       )}
 
-      {searchParams.canceled && (
+      {canceled && (
         <p className="tex-sm text-red-900">
           Payment failed or canceled. Please try again.
         </p>
