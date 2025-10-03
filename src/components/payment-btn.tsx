@@ -10,7 +10,7 @@ export default function PaymentButton() {
   return (
     <Button
       disabled={isPending}
-      onClick={() => startTransition(createCheckoutSession)}
+      onClick={async () => startTransition( createCheckoutSession)}
     >
       Get life time access by paying $199
     </Button>
