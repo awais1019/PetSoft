@@ -14,10 +14,10 @@ export default async function page(props: { searchParams: SearchParams }) {
   return (
     <main className="flex flex-col items-center justify-center space-y-8">
       <H1>PetSoft access requires payment </H1>
+      {!success && <PaymentButton />}
 
       {success && <PaymentAccessButton />}
 
-      {!success && <PaymentButton />}
 
       {success && (
         <p className="tex-sm text-green-900">
