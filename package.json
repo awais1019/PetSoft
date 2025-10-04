@@ -10,8 +10,12 @@
     "postinstall": "prisma generate"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "generate": {
+      "binaryTargets": ["native", "rhel-openssl-3.0.x"]
+    }
   },
+  
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.16.3",

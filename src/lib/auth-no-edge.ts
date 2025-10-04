@@ -4,10 +4,35 @@ import bcrypt from "bcryptjs";
 import { getUserbyEmail } from "./server-utils";
 import { authSchema } from "./schema";
 import { nextAuthEdgeConfig } from "./auth-edge";
-
+import prisma from "./prisma";
 
 const config: NextAuthConfig = {
   ...nextAuthEdgeConfig,
+  callbacks: {
+    ...nextAuthEdgeConfig.callbacks,
+    jwt: async ({ token, user, trigger }) => {
+      if (user) {
+        // on sign in
+        token.id = user.id;
+        token.email = user.email!;
+        token.hasAccess = user.hasAccess;
+      }
+
+      if (trigger === "update") {
+        // on every request
+        const userFromDb = await prisma.user.findUnique({
+          where: {
+            email: token.email!,
+          },
+        });
+        if (userFromDb) {
+          token.hasAccess = userFromDb.hasAccess;
+        }
+      }
+
+      return token;
+    },
+  },
   providers: [
     Credentials({
       //runs on sign in
@@ -33,7 +58,6 @@ const config: NextAuthConfig = {
       },
     }),
   ],
- 
 } satisfies NextAuthConfig;
 
 export const { auth, signIn, signOut, handlers } = NextAuth(config);
