@@ -7,18 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "vercel-build": "prisma generate && next build",
     "postinstall": "prisma generate"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts",
-    "generate": {
-      "binaryTargets": ["native", "rhel-openssl-3.0.x"]
-    }
+    "seed": "tsx prisma/seed.ts"
   },
-  
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.16.3",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^6.16.3",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
