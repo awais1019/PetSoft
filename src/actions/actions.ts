@@ -14,7 +14,6 @@ import { redirect } from "next/navigation";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function login(prevState: unknown, data: unknown) {
-
   if (!(data instanceof FormData)) {
     return {
       error: "Invalid form data",
@@ -58,11 +57,9 @@ export async function register(prevState: unknown, data: unknown) {
   } catch (error) {
     return { error: getPrismaErrorMessage(error) };
   }
-  await signIn("credentials", data);
 }
 
 export async function logout() {
-
   await signOut({ redirectTo: "/" });
 }
 
@@ -97,7 +94,6 @@ export async function addPet(pet: unknown) {
 export async function editPet(newPet: unknown, petId: unknown) {
   //check if user is authenticated
   const session = await checkAuth();
-
 
   //check if pet data and petId are valid
   const validatePet = PetFormSchema.safeParse(newPet);

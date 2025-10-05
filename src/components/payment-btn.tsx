@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 
 import React, { useTransition } from "react";
 import { Button } from "./ui/button";
@@ -10,7 +9,9 @@ export default function PaymentButton() {
   return (
     <Button
       disabled={isPending}
-      onClick={async () => startTransition( createCheckoutSession)}
+      onClick={() => {
+        startTransition(async () => await createCheckoutSession());
+      }}
     >
       Get life time access by paying $199
     </Button>
