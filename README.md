@@ -157,6 +157,15 @@ npm run dev
 **Why this split?**  
 Vercel imposes a 1MB middleware limit — this approach keeps middleware fast and small.
 
+### ⚙️ Prisma Client Initialization Error (Resolved)
+**Previous Cause:** Prisma binaries were missing during the production build, causing client initialization to fail.
+
+**Fix Implemented:**  
+Added the **Prisma Webpack Plugin** to the Next.js build configuration.  
+This plugin automatically includes the required Prisma binaries during the build process.
+
+✅ **Result:** Prisma Client now initializes correctly in production without manual `npx prisma generate` or binary errors.
+
 
 ## 💳 Stripe Payment Flow
 
