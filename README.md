@@ -157,14 +157,7 @@ npm run dev
 **Why this split?**  
 Vercel imposes a 1MB middleware limit — this approach keeps middleware fast and small.
 
-### ⚙️ Prisma Client Initialization Error (Resolved)
-**Previous Cause:** Prisma binaries were missing during the production build, causing client initialization to fail.
 
-**Fix Implemented:**  
-Added the **Prisma Webpack Plugin** to the Next.js build configuration.  
-This plugin automatically includes the required Prisma binaries during the build process.
-
-✅ **Result:** Prisma Client now initializes correctly in production without manual `npx prisma generate` or binary errors.
 
 
 ## 💳 Stripe Payment Flow
@@ -205,12 +198,14 @@ This plugin automatically includes the required Prisma binaries during the build
 - `auth-edge.ts` → lightweight for middleware.  
 - `auth-no-edge.ts` → heavy version for server actions.
 
-### ⚠️ Prisma Client Initialization Error
-**Cause:** Prisma binaries missing during build.  
-**Fix:**
-- Add `npx prisma generate` in build scripts.  
-- Use a **singleton Prisma client** pattern.  
-- Set `DATABASE_URL` in Vercel environment variables.
+### ⚙️ Prisma Client Initialization Error
+**Previous Cause:** Prisma binaries were missing during the production build, causing client initialization to fail.
+
+**Fix Implemented:**  
+Added the **Prisma Webpack Plugin** to the Next.js build configuration.  
+This plugin automatically includes the required Prisma binaries during the build process.
+
+✅ **Result:** Prisma Client now initializes correctly in production without manual `npx prisma generate` or binary errors.
 
 
 
