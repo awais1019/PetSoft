@@ -1,12 +1,14 @@
 import H1 from "@/components/h1";
 import PaymentAccessButton from "@/components/payment-acess-btn";
 import PaymentButton from "@/components/payment-btn";
+import { auth } from "@/lib/auth-no-edge";
 import React from "react";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default async function page(props: { searchParams: SearchParams }) {
   const query = await props.searchParams;
+  const session = await auth();
 
   const success = query.success;
   const canceled = query.canceled;
@@ -14,7 +16,7 @@ export default async function page(props: { searchParams: SearchParams }) {
   return (
     <main className="flex flex-col items-center justify-center space-y-8">
       <H1>PetSoft access requires payment </H1>
-      {!success && <PaymentButton />}
+      {!success && !session?.user.hasAccess && <PaymentButton />}
 
       {success && <PaymentAccessButton />}
 

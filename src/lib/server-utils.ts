@@ -10,7 +10,6 @@ export async function checkAuth() {
   if (!session) {
     redirect("/login");
   }
-  console.log("session", session.user.id);
   return session;
 }
 export async function getPetbyId(petId: Pet["id"]) {

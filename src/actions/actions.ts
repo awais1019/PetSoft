@@ -172,6 +172,12 @@ export async function checkoutPet(petId: unknown) {
 export async function createCheckoutSession() {
   //check if user is authenticated
   const session = await checkAuth();
+
+  //don't let an already-entitled user re-purchase / re-hit a stale button
+  if (session.user.hasAccess) {
+    redirect("/app/dashboard");
+  }
+
   const checkoutSession = await stripe.checkout.sessions.create({
     customer_email: session.user.email || undefined,
     line_items: [{ price: "price_1SD62oDiLDCnEIpyILYbuwGL", quantity: 1 }],

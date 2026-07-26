@@ -6,47 +6,35 @@ export const nextAuthEdgeConfig = {
   },
   callbacks: {
     authorized: ({ auth, request }) => {
-      // runs on every request with middleware
+      // runs on every request with middleware, including Server Action
+      // POSTs to non-/api routes - redirects must never be returned for
+      // those, since Next.js expects an RSC action-response, not a
+      // redirect, and will crash client-side otherwise.
       const isLoggedIn = Boolean(auth?.user);
-      const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
+      const hasAccess = Boolean(auth?.user?.hasAccess);
+      const { pathname } = request.nextUrl;
+      const isAppRoute = pathname.startsWith("/app");
+      const isAuthPage = pathname === "/login" || pathname === "/signup";
+      const isGet = request.method === "GET";
 
-      if (!isLoggedIn && isTryingToAccessApp) {
-        return false;
-      }
-
-      if (isLoggedIn && isTryingToAccessApp && !auth?.user.hasAccess) {
-        return Response.redirect(new URL("/payment", request.nextUrl));
-      }
-
-      if (isLoggedIn && isTryingToAccessApp && auth?.user.hasAccess) {
-        return true;
-      }
-
-      if (
-        isLoggedIn &&
-        (request.nextUrl.pathname.includes("/login") ||
-          request.nextUrl.pathname.includes("/signup")) &&
-        auth?.user.hasAccess
-      ) {
-        return Response.redirect(new URL("/app/dashboard", request.nextUrl));
-      }
-
-      if (isLoggedIn && !isTryingToAccessApp && !auth?.user.hasAccess) {
-        if (
-          request.nextUrl.pathname.includes("/login") ||
-          request.nextUrl.pathname.includes("/signup")
-        ) {
-          return Response.redirect(new URL("/payment", request.nextUrl));
+      if (isAppRoute) {
+        if (!isLoggedIn) return false;
+        if (!hasAccess) {
+          return isGet
+            ? Response.redirect(new URL("/payment", request.nextUrl))
+            : true;
         }
-
         return true;
       }
 
-      if (!isLoggedIn && !isTryingToAccessApp) {
-        return true;
+      if (isLoggedIn && isAuthPage) {
+        const target = hasAccess ? "/app/dashboard" : "/payment";
+        return isGet
+          ? Response.redirect(new URL(target, request.nextUrl))
+          : true;
       }
 
-      return false;
+      return true;
     },
     jwt: async ({ token, user }) => {
       if (user) {
