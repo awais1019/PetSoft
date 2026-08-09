@@ -18,7 +18,7 @@ export default async function layout({
   return (
     <>
       <BackgroundPattern />
-      <div className="max-w-5xl mx-auto px- flex flex-col min-h-screen">
+      <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-4 flex flex-col min-h-screen">
         <AppHeader />
         <SearchContextProvider>
           <PetContextProvider data={pets}>{children}</PetContextProvider>

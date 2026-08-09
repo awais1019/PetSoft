@@ -20,7 +20,7 @@ export default  function DashboardPage() {
         <Stats />
       </div>
 
-      <div className="grid md:grid-cols-3 grid-rows-[45px_300px_500px] md:grid-rows-[40px_1fr] gap-4 md:h-[500px] px-4 py-2">
+      <div className="grid md:grid-cols-3 grid-rows-[45px_300px_500px] md:grid-rows-[40px_1fr] gap-4 md:h-[500px] xl:h-[600px] 2xl:h-[650px] px-4 py-2">
         <div className="col-start-1 col-span-1 row-start-1 row-span-1">
           <SearchForm />
         </div>
