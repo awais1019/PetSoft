@@ -198,6 +198,23 @@ Vercel imposes a 1MB middleware limit — this approach keeps middleware fast an
 - NextAuth JWT & session callbacks reflect updated `hasAccess`.  
 - Client UI re-renders automatically with new access level.
 
+### 🧪 Testing Payments Locally
+
+Stripe **test mode** (active whenever you use your `sk_test_...` / `pk_test_...` keys) accepts special card numbers instead of real cards, so you can generate fake transaction history without moving real money:
+
+| Card number | Result |
+|---|---|
+| `4242 4242 4242 4242` | Payment succeeds |
+| `4000 0000 0000 0002` | Card declined |
+| `4000 0025 0000 3155` | Requires 3D Secure authentication |
+
+For any test card, use:
+- **Expiry** — any future date (e.g. `12/34`)
+- **CVC** — any 3 digits (e.g. `123`)
+- **ZIP** — any 5 digits (e.g. `12345`)
+
+Each successful test-mode checkout shows up in the Stripe Dashboard (with **Test mode** toggled on) under **Payments**, so repeating checkout with `4242 4242 4242 4242` a few times is an easy way to populate `hasAccess` transitions and Stripe's own dashboard with sample transaction history for demos/screenshots. See [Stripe's testing docs](https://stripe.com/docs/testing) for the full list of test cards. Test-mode payments never touch real card networks — this only works with test-mode keys.
+
 
 
 ## 📦 Deployment Notes
