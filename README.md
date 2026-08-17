@@ -5,6 +5,16 @@ It enables users to **track pets, manage their details, perform searches**, and 
 
 The app leverages **Server Actions** for all CRUD operations, integrates **NextAuth v5 (Credentials Provider)** for authentication, and uses **Stripe** for secure payment processing — all wrapped in a **clean, responsive, and optimized UI** built with **shadcn/ui** and **TailwindCSS**.
 
+**Live demo:** [pet-soft-beige.vercel.app](https://pet-soft-beige.vercel.app/)
+
+## 📸 Screenshots
+
+![Login](assets/screenshots/01-login.png)
+![Dashboard – add pet](assets/screenshots/02-dashboard-add-pet.png)
+![Dashboard – pet detail](assets/screenshots/03-dashboard-pet-detail.png)
+![Paywall](assets/screenshots/04-paywall.png)
+![Stripe checkout](assets/screenshots/05-stripe-checkout.png)
+
 
 
 ## ✨ Features
